@@ -283,7 +283,20 @@ function _gettext($msgid) {
  * Alias for gettext.
  */
 function __($msgid) {
-    return _gettext($msgid);
+//    return _gettext($msgid);
+
+    $english_text = _gettext($msgid);
+
+    // For now don't enable inline translation for buttons
+    $buttons = array("Go", "Create", "Features", "SQL queries", "Navigation panel", "Main panel");
+
+    if ($english_text == nil || $english_text == "")
+        return "";
+
+    if (in_array($english_text, $buttons))
+        return trl(_gettext($msgid));
+
+    return tr(_gettext($msgid));
 }
 
 /**

@@ -1,3 +1,6 @@
+<?php require_once(__DIR__ . '/../vendor/tr8n/tr8n-client-sdk/library/Tr8n.php'); ?>
+<?php tr8n_init_client_sdk("https://sandbox.tr8nhub.com", "3c24965bba2c88875", "cf0394f9bee3ba038"); ?>
+
 <?php
 /* vim: set expandtab sw=4 ts=4 sts=4: */
 /**

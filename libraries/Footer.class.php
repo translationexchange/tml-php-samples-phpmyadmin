@@ -310,8 +310,11 @@ class PMA_Footer
                 }
             }
             if (! $this->_isAjax) {
+                $retval .= "<script type='text/javascript' src='" . \Tr8n\Config::instance()->application->jsBootUrl() . "'></script>";
                 $retval .= "</body></html>";
             }
+
+            tr8n_complete_request();
         }
 
         return $retval;
