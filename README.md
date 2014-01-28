@@ -1,3 +1,21 @@
+Tr8n phpMyAdmin Sample Application
+===================
+
+This application demonstrates how Tr8n can be integrated with some of the existing applications. 
+
+To run this sample application, run the following commands:
+
+        $ curl -s http://getcomposer.org/installer | php
+        $ php composer.phar install
+
+The application is currently configured to point to a Tr8n Sandbox Server. To be able to translate this application, you can either request to be added to that application on sandbox or create your own application. 
+
+If you create your own application, please make sure to use the key and secret from your application and update the following line:
+
+https://github.com/tr8n/tr8n_phpmyadmin_sample/blob/master/libraries/common.inc.php#L2
+
+
+
 phpMyAdmin - Readme
 ===================
 
