@@ -310,11 +310,71 @@ class PMA_Footer
                 }
             }
             if (! $this->_isAjax) {
-                $retval .= "<script type='text/javascript' src='" . \Tr8n\Config::instance()->application->jsBootUrl() . "'></script>";
+                $retval .= " <script>\n";
+                $retval .= "        function tml_add_css(doc, value, inline) {\n";
+                $retval .= "            var css = null;\n";
+                $retval .= "            if (inline) {\n";
+                $retval .= "                css = doc.createElement('style'); css.type = 'text/css';\n";
+                $retval .= "                if (css.styleSheet) css.styleSheet.cssText = value;\n";
+                $retval .= "                else css.appendChild(document.createTextNode(value));\n";
+                $retval .= "            } else {\n";
+                $retval .= "                css = doc.createElement('link'); css.setAttribute('type', 'text/css');\n";
+                $retval .= "                css.setAttribute('rel', 'stylesheet'); css.setAttribute('media', 'screen');\n";
+                $retval .= "                if (value.indexOf('//') != -1) css.setAttribute('href', value);\n";
+                $retval .= "                else css.setAttribute('href', '" . tml_application()->host . "' + value);\n";
+                $retval .= "            }\n";
+                $retval .= "            doc.getElementsByTagName('head')[0].appendChild(css);\n";
+                $retval .= "            return css;\n";
+                $retval .= "        }\n";
+                $retval .= "        function tml_add_script(doc, id, src, onload) {\n";
+                $retval .= "            var script = doc.createElement('script');\n";
+                $retval .= "            script.setAttribute('id', id); script.setAttribute('type', 'application/javascript');\n";
+                $retval .= "            if (src.indexOf('//') != -1)  script.setAttribute('src', src);\n";
+                $retval .= "            else script.setAttribute('src', '" . tml_application()->host . "' + src);\n";
+                $retval .= "            script.setAttribute('charset', 'UTF-8');\n";
+                $retval .= "            if (onload) script.onload = onload;\n";
+                $retval .= "            doc.getElementsByTagName('head')[0].appendChild(script);\n";
+                $retval .= "            return script;\n";
+                $retval .= "        }\n";
+                $retval .= "\n";
+                $retval .= "        (function() {\n";
+                $retval .= "            if (window.addEventListener) window.addEventListener('load', tml_init, false); // Standard\n";
+                $retval .= "            else if (window.attachEvent) window.attachEvent('onload', tml_init); // Microsoft\n";
+                $retval .= "            window.setTimeout(function() {  // just in case, hit it one more time a second later\n";
+                $retval .= "                tml_init();\n";
+                $retval .= "            }, 1000);\n";
+                $retval .= "\n";
+                $retval .= "            function tml_init() {\n";
+                $retval .= "                if (window.tml_already_initialized) return;\n";
+                $retval .= "                window.tml_already_initialized = true;\n";
+                $retval .= "\n";
+                $retval .= "                tml_add_css(window.document, '" . tml_application()->tools["stylesheet"] . "', false);\n";
+                $retval .= "                tml_add_css(window.document, \"" . tml_application()->css . "\", true);\n";
+                $retval .= "\n";
+                $retval .= "                tml_add_script(window.document, 'tml-jssdk', '" . tml_application()->tools["javascript"] . "', function() {\n";
+                $retval .= "                    Tml.app_key = '" . tml_application()->key . "';\n";
+                $retval .= "                    Tml.host = '" . tml_application()->tools["host"] . "';\n";
+                $retval .= "                    Tml.sources = " . json_encode(\tml\Config::instance()->requested_sources) . "\n";
+                $retval .= "                    Tml.default_locale = '" . tml_application()->default_locale . "';\n";
+                $retval .= "                    Tml.page_locale = '" . \tml\Config::instance()->current_language->locale . "';\n";
+                $retval .= "                    Tml.locale = '" . \tml\Config::instance()->current_language->locale . "';\n";
+                $retval .= "\n";
+                if (tml_application()->isFeatureEnabled("shortcuts")) {
+                    foreach (tml_application()->shortcuts as $keys=>$script) {
+                        $retval .= "                    shortcut.add('" . $keys . "', function() {\n";
+                        $retval .= "                        " . $script;
+                        $retval .= "                    });\n";
+                    }
+                }
+                $retval .= "                });\n";
+                $retval .= "            }\n";
+                $retval .= "        })();\n";
+                $retval .= "    </script>\n";
+
                 $retval .= "</body></html>";
             }
 
-            tr8n_complete_request();
+            tml_complete_request();
         }
 
         return $retval;

@@ -545,6 +545,7 @@ function PMA_sendHeaderLocation($uri, $use_refresh = false)
         echo 'setTimeout("window.location = unescape(\'"'
             . PMA_escapeJsString($uri) . '"\')", 2000);' . "\n";
         echo '//]]>' . "\n";
+
         echo '</script>' . "\n";
         echo '</head>' . "\n";
         echo '<body>' . "\n";
